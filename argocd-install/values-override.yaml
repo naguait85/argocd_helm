@@ -32,31 +32,43 @@ server:
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
-     
-    - name: sample_application
-      namespace: dev
+    
+    - name: argocd-apps
+      namespace: argocd
       destination:
-        namespace: dev
+        namespace: argocd
         server: https://kubernetes.default.svc
-      project: default
+      project: argocd
       source:
-        helm:
-          version: v3
-          valueFiles:
-          - values.yaml
-        path: charts/helm-example
-        repoURL: https://github.com/abhishakeonteddu/gitopps_repo.git
+        path: argocd-apps
+        repoURL: https://github.com/abhishakeonteddu/argocd_helm.git
         targetRevision: HEAD
         directory:
           recurse: true
           jsonnet: {}
       syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
         automated:
           selfHeal: true
           prune: true
-          
+    
+    - name: argocd-appprojects
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: argocd-appprojects
+        repoURL: https://github.com/abhishakeonteddu/argocd_helm.git
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true     
+     
   additionalProjects: 
   - name: argocd
     namespace: argocd
